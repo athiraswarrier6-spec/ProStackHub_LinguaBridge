@@ -1,0 +1,165 @@
+import { useState } from 'react'
+import './App.css'
+
+function App() {
+  const [text, setText] = useState('')
+  const [sourceLanguage, setSourceLanguage] = useState('Auto Detect')
+  const [targetLanguage, setTargetLanguage] = useState('English')
+  const [translatedText, setTranslatedText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleTranslate = async () => {
+    if (!text.trim()) {
+      setError('Please enter some text to translate.')
+      setTranslatedText('')
+      return
+    }
+
+    if (sourceLanguage === targetLanguage) {
+      setTranslatedText(text)
+      setError('')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    setTranslatedText('')
+
+    try {
+      const response = await fetch('http://localhost:5000/api/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          sourceLanguage,
+          targetLanguage,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Translation failed.')
+      }
+
+      setTranslatedText(data.translatedText)
+    } catch (err) {
+      console.error(err)
+      setError(
+        'Unable to translate right now. Make sure the backend server is running.'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCopy = async () => {
+    if (!translatedText) return
+
+    try {
+      await navigator.clipboard.writeText(translatedText)
+      alert('Translation copied!')
+    } catch (err) {
+      console.error('Copy failed:', err)
+    }
+  }
+
+  const handleSpeak = () => {
+    if (!translatedText) return
+
+    window.speechSynthesis.cancel()
+
+    const speech = new SpeechSynthesisUtterance(translatedText)
+    speech.lang = targetLanguage === 'Malayalam' ? 'ml-IN' : 'en-US'
+
+    window.speechSynthesis.speak(speech)
+  }
+
+  return (
+    <div className="app">
+      <header>
+        <h1>🌐 LinguaBridge</h1>
+        <p>Translate languages effortlessly with AI</p>
+      </header>
+
+      <main className="translator-container">
+        <div className="language-selectors">
+          <div>
+            <label>From</label>
+            <select
+              value={sourceLanguage}
+              onChange={(e) => setSourceLanguage(e.target.value)}
+            >
+              <option>Auto Detect</option>
+              <option>English</option>
+              <option>Malayalam</option>
+              <option>Hindi</option>
+              <option>Spanish</option>
+              <option>French</option>
+              <option>German</option>
+            </select>
+          </div>
+
+          <div>
+            <label>To</label>
+            <select
+              value={targetLanguage}
+              onChange={(e) => setTargetLanguage(e.target.value)}
+            >
+              <option>English</option>
+              <option>Malayalam</option>
+              <option>Hindi</option>
+              <option>Spanish</option>
+              <option>French</option>
+              <option>German</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="translation-boxes">
+          <div className="text-box">
+            <h3>Enter Text</h3>
+
+            <textarea
+              placeholder="Type or paste your text here..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </div>
+
+          <div className="text-box">
+            <h3>Translation</h3>
+
+            <div className="translated-text">
+              {loading
+                ? 'Translating...'
+                : translatedText || 'Your translation will appear here...'}
+            </div>
+
+            {translatedText && (
+              <div className="translation-actions">
+                <button onClick={handleCopy}>📋 Copy</button>
+                <button onClick={handleSpeak}>🔊 Listen</button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <button
+          className="translate-btn"
+          onClick={handleTranslate}
+          disabled={loading}
+        >
+          {loading ? 'Translating...' : '✨ Translate'}
+        </button>
+      </main>
+    </div>
+  )
+}
+
+export default App
