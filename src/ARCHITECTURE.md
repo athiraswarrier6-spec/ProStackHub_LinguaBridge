@@ -30,7 +30,7 @@ The application allows users to:
                       | Gemini API Request
                       v
                 Google Gemini API
-3. Frontend Architecture
+## 3. Frontend Architecture
 
 The frontend is developed using React and Vite.
 
@@ -49,7 +49,7 @@ The main React component is src/App.jsx.
 
 The application styling is implemented using CSS files inside the src directory.
 
-4. Backend Architecture
+## 4. Backend Architecture
 
 The backend is implemented using Node.js and Express.
 
@@ -69,7 +69,7 @@ Creates the translation prompt.
 Sends the prompt to Google Gemini.
 Processes the Gemini response.
 Returns the translated text to the frontend.
-5. AI Integration
+## 5. AI Integration
 
 LinguaBridge uses the Google Gemini API through the @google/genai package.
 
@@ -79,7 +79,7 @@ GEMINI_API_KEY
 
 The API key is used only by the backend and is not exposed in the React frontend.
 
-6. Automatic Language Detection
+## 6. Automatic Language Detection
 
 When the user selects Auto Detect, the backend asks Gemini to identify the source language and translate the text into the selected target language.
 
@@ -90,7 +90,7 @@ detectedLanguage
 
 to the frontend.
 
-7. Local Storage
+## 7. Local Storage
 
 The browser's localStorage is used for:
 
@@ -109,7 +109,7 @@ Target language
 Original text
 Translation
 Date and time
-8. Deployment Architecture
+## 8. Deployment Architecture
 Frontend
 
 The React/Vite frontend is deployed using:
@@ -134,7 +134,7 @@ The complete project source code is maintained in GitHub.
 Repository:
 
 https://github.com/athiraswarrier6-spec/ProStackHub_LinguaBridge
-9. Architecture Decisions
+## 9. Architecture Decisions
 Separate Frontend and Backend
 
 The frontend and backend are separated so that the React application handles the user interface while the backend handles API communication and Gemini integration.
@@ -151,7 +151,7 @@ Local Storage
 
 Local storage was selected for translation history and caching because the application does not require a database for its current scope.
 
-10. Challenges Faced
+## 10. Challenges Faced
 Challenge 1: Deployment of Frontend and Backend
 
 The local application worked with separate frontend and backend servers, but the production frontend needed to communicate with the deployed backend.
@@ -182,7 +182,7 @@ The backend uses a free hosting plan, so the service may temporarily sleep after
 
 Solution: The application is designed to work with the free hosting environment while keeping deployment costs low for the project demonstration.
 
-11. Technologies Used
+## 11. Technologies Used
 React
 Vite
 JavaScript
@@ -196,7 +196,7 @@ Browser Local Storage
 GitHub
 Vercel
 Render
-12. Future Improvements
+## 12. Future Improvements
 
 Possible future improvements include:
 
